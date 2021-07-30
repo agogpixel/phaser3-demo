@@ -1,11 +1,12 @@
-import { MainScene, PreloadScene, TitleScene } from './scenes'
+import { MainScene, PreloadScene } from './scenes'
 
 export function app(): void {
   new Phaser.Game({
-    title: 'agogpixel/phaser3-project-starter',
+    title: 'agogpixel/phaser3-demo',
     version: '0.0.0',
     type: Phaser.AUTO,
     parent: 'body',
+    pixelArt: true,
     dom: {
       createContainer: true
     },
@@ -18,6 +19,6 @@ export function app(): void {
     plugins: {
       global: []
     },
-    scene: [PreloadScene, TitleScene, MainScene]
+    scene: [PreloadScene, MainScene]
   });
 }
