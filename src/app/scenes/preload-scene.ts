@@ -22,6 +22,8 @@ export class PreloadScene extends Phaser.Scene {
   public preload(): void {
     this.load.image('roguelikeCity_transparent', 'assets/roguelikeCity_transparent.png');
     this.load.tilemapTiledJSON('mapA', 'assets/mapA.json');
+
+    this.load.image('blue', 'assets/blue.png');
   }
 
   /**

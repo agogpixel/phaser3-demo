@@ -44,6 +44,17 @@ export class MainScene extends Phaser.Scene {
     const layer1 = map.createLayer('Tile Layer 1', tileset).setScale(4);
     const layer2 = map.createLayer('Tile Layer 2', tileset).setScale(4);
 
+    const rain = this.add.particles('blue').createEmitter({
+      x: { min: 0, max: layer1.displayWidth },
+      y: 0,
+      lifespan: 1000,
+      speedY: 1500,
+      scaleY: { min: 1, max: 4 },
+      scaleX: .01,
+      quantity: 1,
+      blendMode: 'LIGHTEN',
+    });
+
     const cursors = this.input.keyboard.createCursorKeys();
 
     this.controls = new Phaser.Cameras.Controls.FixedKeyControl({
