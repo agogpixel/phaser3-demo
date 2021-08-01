@@ -1,8 +1,8 @@
-name: Unit Test & Build
+name: Build & Deploy
 on:
   workflow_dispatch:
 jobs:
-  Unit-Test-And-Build:
+  Build-And-Deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -12,15 +12,13 @@ jobs:
           node-version: '14'
       - name: Dependencies
         run: npm install
-      - name: Unit Test
-        run: npm test
       - name: Build
         run: npm run build
-      - name: Archive Coverage Report
-        uses: actions/upload-artifact@v2
+      - name: Deploy
+        uses: JamesIves/github-pages-deploy-action@4.1.4
         with:
-          name: coverage
-          path: coverage
+          branch: gh-pages
+          folder: dist
       - name: Archive Build
         uses: actions/upload-artifact@v2
         with:
