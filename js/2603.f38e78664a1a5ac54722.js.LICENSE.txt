@@ -1,0 +1,18 @@
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @author       samme <samme.npm@gmail.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+/**
+ * @author       samme
+ * @copyright    2020 Photon Storm Ltd.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
