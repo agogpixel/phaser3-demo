@@ -1,3 +1,5 @@
+import { Lightpost } from '../gameobjects';
+
 /**
  * Main scene.
  */
@@ -6,6 +8,15 @@ export class MainScene extends Phaser.Scene {
    * Scene key.
    */
   public static readonly key = 'Main';
+
+  /**
+   *
+   */
+  public static readonly scaleFactor = 4;
+
+  public readonly add: Phaser.GameObjects.GameObjectFactory & { [Lightpost.key]: typeof Lightpost.factory };
+
+  public readonly make: Phaser.GameObjects.GameObjectCreator & { [Lightpost.key]: typeof Lightpost.creator };
 
   /**
    * Keyboard controls.
@@ -44,54 +55,59 @@ export class MainScene extends Phaser.Scene {
       });
     });
 
-    const scaleFactor = 4;
+    const scaleFactor = MainScene.scaleFactor;
 
     // Background.
-    const tilemap = this.make.tilemap({ key: 'mapA', insertNull: true });
+    const tilemap = this.make.tilemap({ key: 'background', insertNull: true });
     const tileset = tilemap.addTilesetImage('roguelikeCity_transparent');
-    const layer = tilemap.createLayer('Tile Layer 1', tileset).setScale(scaleFactor);
-    tilemap.createLayer('Tile Layer 2', tileset).setScale(scaleFactor);
+    const layer = tilemap.createLayer('layer1', tileset).setScale(scaleFactor);
+    tilemap.createLayer('layer2', tileset).setScale(scaleFactor);
 
     // Lightposts.
     const cx = (tilemap.tileWidth / 2) * scaleFactor;
     const cy = (tilemap.tileHeight / 2) * scaleFactor;
     const v = new Phaser.Math.Vector2();
     layer.tileToWorldXY(7, 9, v);
-    const lp1 = this.add.image(v.x + cx, v.y + cy + (cy / 2), 'lightpost', 'right').setScale(scaleFactor).setOrigin(0.2, 1).setDepth(9);
+    const lp1 = this.add
+      .lightpost(v.x + cx, v.y + cy + cy / 2, 'right')
+      .setScale(scaleFactor)
+      .setDepth(9);
     layer.tileToWorldXY(23, 9, v);
-    const lp2 = this.add.image(v.x + cx, v.y + cy + (cy / 2), 'lightpost', 'right').setScale(scaleFactor).setOrigin(0.2, 1).setDepth(9);
+    const lp2 = this.add
+      .lightpost(v.x + cx, v.y + cy + cy / 2, 'right')
+      .setScale(scaleFactor)
+      .setDepth(9);
     layer.tileToWorldXY(15, 15, v);
-    const lp3 = this.add.image(v.x + cx, v.y + cy - (cy / 2), 'lightpost', 'left').setScale(scaleFactor).setOrigin(0.8, 1).setDepth(15);
+    const lp3 = this.add
+      .lightpost(v.x + cx, v.y + cy - cy / 2, 'left')
+      .setScale(scaleFactor)
+      .setDepth(15);
 
     // Rain particle emitter.
-    const rain = this.add.particles('blue').createEmitter({
-      x: { min: 0, max: layer.displayWidth },
-      y: 0,
-      lifespan: 1000,
-      speedY: 1500,
-      scaleY: { min: 1, max: 4 },
-      scaleX: .01,
-      quantity: 1,
-      blendMode: 'SCREEN',
-    });
+    const rainEmitter = this.add
+      .particles('blue')
+      .setDepth(12)
+      .createEmitter({
+        x: { min: 0, max: layer.displayWidth },
+        y: 0,
+        lifespan: { min: 200, max: 1000 },
+        speedY: 1500,
+        scaleY: { min: 1, max: 4 },
+        scaleX: 0.01,
+        quantity: 1,
+        blendMode: 'SCREEN',
+        emitCallback: (particle: Phaser.GameObjects.Particles.Particle) =>
+          rainEmitter.manager.setDepth(Phaser.Math.RND.integerInRange(2, 50))
+      });
 
     // Lighting.
-    const shadow = this.add.graphics();
-    shadow.depth = 1000;
-    shadow.fillStyle(0x000000, 0.75);
-    shadow.fillRect(0, 0, layer.displayWidth, layer.displayHeight);
-
-    // TODO: Lighting.
-    /*const t1 = this.make.graphics({});
-    t1.fillStyle(0xffffff, 1);
-    t1.beginPath();
-    t1.moveTo(585, 825);
-    t1.lineTo(435, 1000);
-    t1.lineTo(735, 1000);
-    t1.fill();
-    const mask = t1.createGeometryMask();
-    mask.invertAlpha = true;
-    shadow.setMask(mask);*/
+    const lightingTexture = this.textures.createCanvas('lighting', layer.displayWidth, layer.displayHeight);
+    lightingTexture.context.fillStyle = 'rgba(0, 0, 0, 0.75)';
+    lightingTexture.context.fillRect(0, 0, layer.displayWidth, layer.displayHeight);
+    lp1.castLighting(lightingTexture, 0.25);
+    lp2.castLighting(lightingTexture, 0.25);
+    lp3.castLighting(lightingTexture, 0.25);
+    this.add.image(0, 0, 'lighting').setOrigin(0).setDepth(100);
 
     // Keyboard controls.
     const cursors = this.input.keyboard.createCursorKeys();
@@ -102,15 +118,20 @@ export class MainScene extends Phaser.Scene {
       up: cursors.up,
       down: cursors.down,
       speed: 0.5,
-      // TODO: weird
+      // TODO: weird - see Phaser.Cameras.Controls.FixedKeyControl zoom logic. Follow up with Phaser 3 maintainers...
       zoomIn: this.input.keyboard.addKey('MINUS'),
       zoomOut: this.input.keyboard.addKey('PLUS'),
       maxZoom: 3,
       minZoom: 0.5
     });
+    this.add
+      .text(0, 0, ['Cursor keys to move camera.', 'Zoom In: +', 'Zoom Out: -'], { fontSize: '32px', color: '#ff00ff' })
+      .setDepth(1000)
+      .setScrollFactor(0);
 
     // Set camera bounds to tilemap's current display dimensions.
     this.cameras.main.setBounds(0, 0, layer.displayWidth, layer.displayHeight);
+    this.cameras.main.centerOn(layer.displayWidth / 2, layer.displayHeight / 2);
   }
 
   public update(time: number, delta: number): void {

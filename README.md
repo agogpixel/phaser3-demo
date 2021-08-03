@@ -1,6 +1,16 @@
 # agogpixel/phaser3-demo
 
-[Phaser 3](https://github.com/photonstorm/phaser) demo.
+[Phaser 3](https://github.com/photonstorm/phaser) demo showing example usage of:
+
+- Tilemap.
+- Runtime texture generation.
+- Particle emitter.
+- Custom gameobject plugin.
+- Canvas texture manipulation for ambient lighting.
+- Scene fade in/out.
+- Camera controls via keyboard.
+
+GitHub Pages [deployment](https://agogpixel.github.io/phaser3-demo/).
 
 ## Develop
 

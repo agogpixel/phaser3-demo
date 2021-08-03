@@ -1,4 +1,5 @@
-import { MainScene, PreloadScene } from './scenes'
+import { LightpostPlugin } from './plugins';
+import { MainScene, PreloadScene } from './scenes';
 
 export function app(): void {
   new Phaser.Game({
@@ -13,11 +14,11 @@ export function app(): void {
     scale: {
       mode: Phaser.Scale.FIT,
       autoCenter: Phaser.Scale.CENTER_BOTH,
-      width: '100%',
-      height: '100%'
+      width: 1600,
+      height: 900
     },
     plugins: {
-      global: []
+      global: [{ key: LightpostPlugin.key, plugin: LightpostPlugin, start: true }]
     },
     scene: [PreloadScene, MainScene]
   });

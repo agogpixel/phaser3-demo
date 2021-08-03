@@ -41,16 +41,14 @@ module.exports = {
       'typeof EXPERIMENTAL': JSON.stringify(false),
       'typeof PLUGIN_CAMERA3D': JSON.stringify(false),
       'typeof PLUGIN_FBINSTANT': JSON.stringify(false),
-      'typeof FEATURE_SOUND': JSON.stringify(true)
+      'typeof FEATURE_SOUND': JSON.stringify(false)
     }),
     new CleanWebpackPlugin(),
     new HtmlWebpackPlugin({
       template: path.resolve(__dirname, './src/index.html')
     }),
     new CopyWebpackPlugin({
-      patterns: [
-        { from: "src/assets", to: "assets" }
-      ]
+      patterns: [{ from: 'src/assets', to: 'assets' }]
     })
   ],
   devServer: {
