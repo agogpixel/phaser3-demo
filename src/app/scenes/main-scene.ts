@@ -96,6 +96,7 @@ export class MainScene extends Phaser.Scene {
         scaleX: 0.01,
         quantity: 1,
         blendMode: 'SCREEN',
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         emitCallback: (particle: Phaser.GameObjects.Particles.Particle) =>
           rainEmitter.manager.setDepth(Phaser.Math.RND.integerInRange(2, 50))
       });
